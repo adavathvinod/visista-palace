@@ -3,11 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import Logo from "./Logo";
 import { Button } from "./ui/button";
+import { useBackgroundMusic } from "@/hooks/useAudio";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const { isPlaying, toggleMusic } = useBackgroundMusic();
   const location = useLocation();
 
   useEffect(() => {
@@ -26,11 +27,6 @@ const Navbar = () => {
     { name: "Book Appointment", path: "/booking" },
     { name: "Contact", path: "/contact" },
   ];
-
-  const toggleMusic = () => {
-    setIsMusicPlaying(!isMusicPlaying);
-    // Music toggle functionality would be implemented here
-  };
 
   return (
     <nav
@@ -67,10 +63,14 @@ const Navbar = () => {
               variant="ghost"
               size="icon"
               onClick={toggleMusic}
-              className="text-gold hover:bg-gold/10"
+              className={`text-gold hover:bg-gold/10 relative ${isPlaying ? "animate-pulse" : ""}`}
               aria-label="Toggle traditional music"
+              title={isPlaying ? "Pause Music" : "Play Traditional Music"}
             >
-              {isMusicPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+              {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+              {isPlaying && (
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              )}
             </Button>
 
             <button
